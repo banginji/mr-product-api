@@ -1,0 +1,14 @@
+type Query {
+    getProductInfo(id: Int): ProductInfo
+}
+
+type ProductInfo {
+    id: Int
+    title: String
+    price: ProductPrice
+}
+
+type ProductPrice {
+    value: Float
+    currencyCode: String
+}
