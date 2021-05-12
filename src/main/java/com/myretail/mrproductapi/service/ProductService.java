@@ -13,8 +13,7 @@ import java.util.Optional;
 @DgsComponent
 @RequiredArgsConstructor
 public class ProductService {
-    private final ProductTitleService productTitleService;
-    private final ProductPriceService productPriceService;
+    private final ProductInfoService productInfoService;
 
     @DgsData(parentType = "Query")
     public DataFetcherResult<ProductInfo> getProductInfo(Integer id) {
@@ -26,11 +25,11 @@ public class ProductService {
 
     @DgsData(parentType = "ProductInfo")
     public Optional<ProductPrice> price(DgsDataFetchingEnvironment dfe) {
-        return productPriceService.getPrice(dfe.getLocalContext());
+        return productInfoService.getPrice(dfe.getLocalContext());
     }
 
     @DgsData(parentType = "ProductInfo")
     public Optional<String> title(DgsDataFetchingEnvironment dfe) {
-        return productTitleService.getTitle(dfe.getLocalContext());
+        return productInfoService.getTitle(dfe.getLocalContext());
     }
 }
