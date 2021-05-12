@@ -10,6 +10,7 @@ import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class RedSkyServiceImpl implements RedSkyService {
     private final Logger logger = LoggerFactory.getLogger(RedSkyServiceImpl.class);
 
     @Override
-    @Retryable(include = {HttpClientErrorException.class, RemoteAccessException.class}, backoff = @Backoff(delay = 300, maxDelay = 500))
+    @Retryable(include = {HttpClientErrorException.class, RemoteAccessException.class, ResourceAccessException.class}, backoff = @Backoff(delay = 300, maxDelay = 500))
     public Optional<RedSkyResponse> getTitle(Integer id) {
         return Optional.ofNullable(restTemplate.getForObject(rsUri(id), RedSkyResponse.class));
     }
@@ -35,6 +36,12 @@ public class RedSkyServiceImpl implements RedSkyService {
     @Recover
     public Optional<?> recover(RemoteAccessException ex, Integer id) {
         logger.error("Could not reach red sky service to retrieve title for product with id: " + id);
+        return Optional.empty();
+    }
+
+    @Recover
+    public Optional<?> recover(ResourceAccessException ex, Integer id) {
+        logger.error("Atempted to reach an unknown service to retrieve title for product with id: " + id);
         return Optional.empty();
     }
 

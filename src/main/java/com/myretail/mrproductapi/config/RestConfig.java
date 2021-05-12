@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+
 @Configuration
 @EnableRetry
 public class RestConfig {
@@ -15,6 +18,10 @@ public class RestConfig {
 
     @Bean
     RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.rootUri(host).build();
+        return builder
+                .rootUri(host)
+                .setConnectTimeout(Duration.of(500, ChronoUnit.MILLIS))
+                .setReadTimeout(Duration.of(500, ChronoUnit.MILLIS))
+                .build();
     }
 }
