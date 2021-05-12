@@ -1,4 +1,4 @@
-package com.myretail.mrproductapi.initializer;
+package com.myretail.mrproductapi.config;
 
 import com.myretail.mrproductapi.persistence.Price;
 import com.myretail.mrproductapi.repository.PriceRepository;

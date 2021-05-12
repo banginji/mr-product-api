@@ -1,4 +1,4 @@
-package com.myretail.mrproductapi.initializer;
+package com.myretail.mrproductapi.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
