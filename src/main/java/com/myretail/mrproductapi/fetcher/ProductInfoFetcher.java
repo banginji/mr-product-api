@@ -1,7 +1,8 @@
-package com.myretail.mrproductapi.service;
+package com.myretail.mrproductapi.fetcher;
 
 import com.myretail.mrproductapi.domain.ProductInfo;
 import com.myretail.mrproductapi.domain.ProductPrice;
+import com.myretail.mrproductapi.service.ProductInfoService;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @DgsComponent
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductInfoFetcher {
     private final ProductInfoService productInfoService;
 
     @DgsData(parentType = "Query")
