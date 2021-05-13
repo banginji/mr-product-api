@@ -1,4 +1,4 @@
-package com.myretail.mrproductapi.service;
+package com.myretail.mrproductapi.service.title;
 
 import com.myretail.mrproductapi.domain.redsky.RedSkyResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +18,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class RedSkyServiceImpl implements RedSkyService {
-    private final RestTemplate restTemplate;
     private final Logger logger = LoggerFactory.getLogger(RedSkyServiceImpl.class);
 
-    @Override
+    private final RestTemplate restTemplate;
+
     @Retryable(include = {HttpClientErrorException.class, RemoteAccessException.class, ResourceAccessException.class}, backoff = @Backoff(delay = 300, maxDelay = 500))
-    public Optional<RedSkyResponse> getTitle(Integer id) {
+    public Optional<RedSkyResponse> findTitleData(Integer id) {
         return Optional.ofNullable(restTemplate.getForObject(rsUri(id), RedSkyResponse.class));
     }
 
