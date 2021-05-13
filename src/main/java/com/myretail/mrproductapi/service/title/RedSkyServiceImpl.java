@@ -22,6 +22,7 @@ public class RedSkyServiceImpl implements RedSkyService {
 
     private final RestTemplate restTemplate;
 
+    @Override
     @Retryable(include = {HttpClientErrorException.class, RemoteAccessException.class, ResourceAccessException.class}, backoff = @Backoff(delay = 300, maxDelay = 500))
     public Optional<RedSkyResponse> findTitleData(Integer id) {
         return Optional.ofNullable(restTemplate.getForObject(rsUri(id), RedSkyResponse.class));

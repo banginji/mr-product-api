@@ -11,7 +11,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductTitleRedSkyService extends ProductTitleService<RedSkyResponse> {
     private final ProductTitleResponseConverter<RedSkyResponse> productTitleResponseConverter;
-    private final RedSkyServiceImpl redSkyService;
+    private final RedSkyService redSkyService;
 
     @Override
     public ProductTitleResponseConverter<RedSkyResponse> getConverter() {
