@@ -11,6 +11,7 @@ import com.myretail.mrproductapi.repository.PriceRepository;
 import com.myretail.mrproductapi.service.ProductInfoServiceImpl;
 import com.myretail.mrproductapi.service.price.DataStoreService;
 import com.myretail.mrproductapi.service.title.ProductTitleRedSkyService;
+import com.myretail.mrproductapi.service.title.RedSkyService;
 import com.myretail.mrproductapi.service.title.RedSkyServiceImpl;
 import com.netflix.graphql.dgs.DgsQueryExecutor;
 import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration;
@@ -25,13 +26,14 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("unchecked")
 @SpringBootTest(classes = {DgsAutoConfiguration.class, ProductInfoFetcher.class, ProductInfoServiceImpl.class, DataStoreService.class, ProductTitleRedSkyService.class, DataStoreResponseConverter.class, RedSkyResponseConverter.class})
 public class ProductInfoFetcherTest {
     @Autowired
     DgsQueryExecutor dgsQueryExecutor;
 
     @MockBean
-    RedSkyServiceImpl redSkyService;
+    RedSkyService redSkyService;
 
     @MockBean
     PriceRepository priceRepository;
