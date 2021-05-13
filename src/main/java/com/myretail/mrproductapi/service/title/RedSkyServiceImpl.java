@@ -41,7 +41,7 @@ public class RedSkyServiceImpl implements RedSkyService {
 
     @Recover
     public Optional<?> recover(ResourceAccessException ex, Integer id) {
-        logger.error("Atempted to reach an unknown service to retrieve title for product with id: " + id);
+        logger.error("Attempted to reach an unknown service to retrieve title for product with id: " + id);
         return Optional.empty();
     }
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class DataStoreService extends AbstractProductPriceService<Price> {
+public class DataStoreService extends ProductPriceService<Price> {
     private final PriceRepository priceRepository;
     private final ProductPriceResponseConverter<Price> productPriceResponseConverter;
 

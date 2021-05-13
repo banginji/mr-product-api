@@ -3,8 +3,8 @@ package com.myretail.mrproductapi.service;
 import com.myretail.mrproductapi.domain.ProductPrice;
 import com.myretail.mrproductapi.domain.redsky.RedSkyResponse;
 import com.myretail.mrproductapi.persistence.Price;
-import com.myretail.mrproductapi.service.price.AbstractProductPriceService;
-import com.myretail.mrproductapi.service.title.AbstractProductTitleService;
+import com.myretail.mrproductapi.service.price.ProductPriceService;
+import com.myretail.mrproductapi.service.title.ProductTitleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +13,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductInfoServiceImpl implements ProductInfoService {
-    private final AbstractProductPriceService<Price> productPriceService;
+    private final ProductPriceService<Price> productPriceService;
 
     @Override
     public Optional<ProductPrice> getPrice(Integer id) {
         return productPriceService.getEntity(id);
     }
 
-    private final AbstractProductTitleService<RedSkyResponse> productTitleService;
+    private final ProductTitleService<RedSkyResponse> productTitleService;
 
     @Override
     public Optional<String> getTitle(Integer id) {
