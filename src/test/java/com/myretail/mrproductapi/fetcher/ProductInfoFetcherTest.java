@@ -1,7 +1,5 @@
 package com.myretail.mrproductapi.fetcher;
 
-import com.myretail.mrproductapi.converter.DataStoreResponseConverter;
-import com.myretail.mrproductapi.converter.RedSkyResponseConverter;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProduct;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProductItem;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProductItemDesc;
@@ -12,7 +10,6 @@ import com.myretail.mrproductapi.service.ProductInfoServiceImpl;
 import com.myretail.mrproductapi.service.price.DataStoreService;
 import com.myretail.mrproductapi.service.title.ProductTitleRedSkyService;
 import com.myretail.mrproductapi.service.title.RedSkyService;
-import com.myretail.mrproductapi.service.title.RedSkyServiceImpl;
 import com.netflix.graphql.dgs.DgsQueryExecutor;
 import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration;
 import org.junit.jupiter.api.Test;
@@ -27,7 +24,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("unchecked")
-@SpringBootTest(classes = {DgsAutoConfiguration.class, ProductInfoFetcher.class, ProductInfoServiceImpl.class, DataStoreService.class, ProductTitleRedSkyService.class, DataStoreResponseConverter.class, RedSkyResponseConverter.class})
+@SpringBootTest(classes = {DgsAutoConfiguration.class, ProductInfoFetcher.class, ProductInfoServiceImpl.class, DataStoreService.class, ProductTitleRedSkyService.class})
 public class ProductInfoFetcherTest {
     @Autowired
     DgsQueryExecutor dgsQueryExecutor;

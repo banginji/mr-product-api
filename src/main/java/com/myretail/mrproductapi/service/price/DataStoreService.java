@@ -1,6 +1,7 @@
 package com.myretail.mrproductapi.service.price;
 
 import com.myretail.mrproductapi.converter.ProductPriceResponseConverter;
+import com.myretail.mrproductapi.domain.ProductPrice;
 import com.myretail.mrproductapi.persistence.Price;
 import com.myretail.mrproductapi.repository.PriceRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DataStoreService extends ProductPriceService<Price> {
     private final PriceRepository priceRepository;
-    private final ProductPriceResponseConverter<Price> productPriceResponseConverter;
 
     @Override
     public ProductPriceResponseConverter<Price> getConverter() {
-        return productPriceResponseConverter;
+        return source -> source.map(price -> new ProductPrice(price.value(), price.currencyCode()));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.myretail.mrproductapi.service.title;
 
-import com.myretail.mrproductapi.converter.ProductTitleResponseConverter;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProduct;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProductItem;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProductItemDesc;
@@ -22,10 +21,35 @@ class ProductTitleRedSkyServiceTest {
     }
 
     @Test
+    void someTitleConversionTest() {
+        String title = "t1";
+        RedSkyResponse titleData = new RedSkyResponse(new RedSkyProduct(new RedSkyProductItem("1", new RedSkyProductItemDesc(title))));
+
+        ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
+
+        Optional<String> result = productTitleRedSkyService.getConverter().convert(Optional.of(titleData));
+
+        Optional<String> expected = Optional.of(title);
+        assertThat(result).isNotEmpty();
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void emptyTitleConversionTest() {
+        Optional<RedSkyResponse> titleData = Optional.empty();
+
+        ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
+
+        Optional<String> result = productTitleRedSkyService.getConverter().convert(titleData);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
     void testWhenRedSkyDoesNotHaveTitleDataForGivenId() {
         Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenReturn(Optional.empty());
 
-        ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService((ProductTitleResponseConverter<RedSkyResponse>) Mockito.mock(ProductTitleResponseConverter.class), redSkyService);
+        ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
 
         Optional<RedSkyResponse> actual = productTitleRedSkyService.findEntity(1);
 
@@ -39,7 +63,7 @@ class ProductTitleRedSkyServiceTest {
         RedSkyResponse redSkyResponse = new RedSkyResponse(new RedSkyProduct(new RedSkyProductItem("1", new RedSkyProductItemDesc(title))));
         Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenReturn(Optional.of(redSkyResponse));
 
-        ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService((ProductTitleResponseConverter<RedSkyResponse>) Mockito.mock(ProductTitleResponseConverter.class), redSkyService);
+        ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
 
         Optional<RedSkyResponse> actual = productTitleRedSkyService.findEntity(1);
 

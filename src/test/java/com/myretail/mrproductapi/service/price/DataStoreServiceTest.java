@@ -1,6 +1,6 @@
 package com.myretail.mrproductapi.service.price;
 
-import com.myretail.mrproductapi.converter.ProductPriceResponseConverter;
+import com.myretail.mrproductapi.domain.ProductPrice;
 import com.myretail.mrproductapi.persistence.Price;
 import com.myretail.mrproductapi.repository.PriceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +21,36 @@ class DataStoreServiceTest {
     }
 
     @Test
+    void somePriceConversionTest() {
+        Price price = new Price(1, 3.4, "USD");
+
+        DataStoreService dataStoreService = new DataStoreService(priceRepository);
+
+        Optional<ProductPrice> result = dataStoreService.getConverter().convert(Optional.of(price));
+
+        Optional<ProductPrice> expected = Optional.of(new ProductPrice(price.value(), price.currencyCode()));
+
+        // Assertions
+        assertThat(result).isNotEmpty();
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void emptyPriceConversionTest() {
+        Optional<Price> price = Optional.empty();
+
+        DataStoreService dataStoreService = new DataStoreService(priceRepository);
+
+        Optional<ProductPrice> result = dataStoreService.getConverter().convert(price);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
     void testWhenDataStoreDoesNotHavePriceInformationForGivenId() {
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
-        DataStoreService dataStoreService = new DataStoreService(priceRepository, (ProductPriceResponseConverter<Price>) Mockito.mock(ProductPriceResponseConverter.class));
+        DataStoreService dataStoreService = new DataStoreService(priceRepository);
 
         Optional<Price> actual = dataStoreService.findEntity(1);
 
@@ -37,7 +63,7 @@ class DataStoreServiceTest {
         Price price = new Price(1, 1.1, "USD");
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(price));
 
-        DataStoreService dataStoreService = new DataStoreService(priceRepository, (ProductPriceResponseConverter<Price>) Mockito.mock(ProductPriceResponseConverter.class));
+        DataStoreService dataStoreService = new DataStoreService(priceRepository);
 
         Optional<Price> actual = dataStoreService.findEntity(1);
 
