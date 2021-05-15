@@ -15,7 +15,7 @@ public class DataStoreService extends ProductPriceService<Price> {
     private final PriceRepository priceRepository;
 
     @Override
-    public ProductPriceResponseConverter<Price> getConverter() {
+    public ProductPriceResponseConverter<Price> converter() {
         return source -> source.map(price -> new ProductPrice(price.value(), price.currencyCode()));
     }
 

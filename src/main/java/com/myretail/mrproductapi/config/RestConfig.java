@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 @Configuration
 @EnableRetry
 public class RestConfig {
-    @Value("${redsky.host:https://redsky.target.com}")
+    @Value("${redsky.host}")
     String host;
 
     @Bean

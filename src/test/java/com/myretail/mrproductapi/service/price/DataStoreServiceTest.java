@@ -26,7 +26,7 @@ class DataStoreServiceTest {
 
         DataStoreService dataStoreService = new DataStoreService(priceRepository);
 
-        Optional<ProductPrice> result = dataStoreService.getConverter().convert(Optional.of(price));
+        Optional<ProductPrice> result = dataStoreService.converter().convert(Optional.of(price));
 
         Optional<ProductPrice> expected = Optional.of(new ProductPrice(price.value(), price.currencyCode()));
 
@@ -41,7 +41,7 @@ class DataStoreServiceTest {
 
         DataStoreService dataStoreService = new DataStoreService(priceRepository);
 
-        Optional<ProductPrice> result = dataStoreService.getConverter().convert(price);
+        Optional<ProductPrice> result = dataStoreService.converter().convert(price);
 
         assertThat(result).isEmpty();
     }

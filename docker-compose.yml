@@ -1,7 +1,15 @@
 version: "3"
 services:
+  ms:
+    build: .
+    ports:
+      - 8080:8080
+    links:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+      REDSKY_HOST: https://redsky.target.com
   mongodb:
     image: mongo
-    container_name: "mongodb"
     ports:
-    - 27017:27017
+      - 27017:27017

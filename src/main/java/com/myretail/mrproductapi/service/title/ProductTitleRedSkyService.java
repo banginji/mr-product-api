@@ -13,7 +13,7 @@ public class ProductTitleRedSkyService extends ProductTitleService<RedSkyRespons
     private final RedSkyService redSkyService;
 
     @Override
-    public ProductTitleResponseConverter<RedSkyResponse> getConverter() {
+    public ProductTitleResponseConverter<RedSkyResponse> converter() {
         return source -> source.map(response -> response.product().item().productDescription().title());
     }
 
