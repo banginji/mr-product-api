@@ -6,6 +6,8 @@ import com.myretail.mrproductapi.service.ProductInfoFetcherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProductTitleRedSkyService extends ProductTitleService<RedSkyResponse, Integer> {
@@ -17,7 +19,7 @@ public class ProductTitleRedSkyService extends ProductTitleService<RedSkyRespons
     }
 
     @Override
-    public ProductInfoFetcherService<Integer, RedSkyResponse> fetcherService() {
+    public ProductInfoFetcherService<Optional<RedSkyResponse>, Integer> fetcherService() {
         return redSkyService::findTitleData;
     }
 }

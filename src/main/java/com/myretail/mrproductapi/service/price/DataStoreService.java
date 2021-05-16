@@ -8,6 +8,8 @@ import com.myretail.mrproductapi.service.ProductInfoFetcherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class DataStoreService extends ProductPriceService<Price, Integer> {
@@ -19,7 +21,7 @@ public class DataStoreService extends ProductPriceService<Price, Integer> {
     }
 
     @Override
-    public ProductInfoFetcherService<Integer, Price> fetcherService() {
+    public ProductInfoFetcherService<Optional<Price>, Integer> fetcherService() {
         return priceRepository::findById;
     }
 }
