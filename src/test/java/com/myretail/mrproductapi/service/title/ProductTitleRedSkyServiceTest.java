@@ -51,7 +51,7 @@ class ProductTitleRedSkyServiceTest {
 
         ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
 
-        Optional<RedSkyResponse> actual = productTitleRedSkyService.findEntity(1);
+        Optional<RedSkyResponse> actual = productTitleRedSkyService.fetcherService().findEntity(1);
 
         // Assertions
         assertThat(actual).isEmpty();
@@ -65,7 +65,7 @@ class ProductTitleRedSkyServiceTest {
 
         ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
 
-        Optional<RedSkyResponse> actual = productTitleRedSkyService.findEntity(1);
+        Optional<RedSkyResponse> actual = productTitleRedSkyService.fetcherService().findEntity(1);
 
         // Assertions
         assertThat(actual).isNotEmpty();

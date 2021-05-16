@@ -15,13 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("unchecked")
 class ProductInfoServiceTest {
-    ProductPriceService<Price> productPriceService;
-    ProductTitleService<RedSkyResponse> productTitleService;
+    ProductPriceService<Price, Integer> productPriceService;
+    ProductTitleService<RedSkyResponse, Integer> productTitleService;
 
     @BeforeEach
     void beforeEach() {
-        productPriceService = (ProductPriceService<Price>) Mockito.mock(ProductPriceService.class);
-        productTitleService = (ProductTitleService<RedSkyResponse>) Mockito.mock(ProductTitleService.class);
+        productPriceService = (ProductPriceService<Price, Integer>) Mockito.mock(ProductPriceService.class);
+        productTitleService = (ProductTitleService<RedSkyResponse, Integer>) Mockito.mock(ProductTitleService.class);
     }
 
     @Test

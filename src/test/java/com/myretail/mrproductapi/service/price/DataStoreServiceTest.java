@@ -52,7 +52,7 @@ class DataStoreServiceTest {
 
         DataStoreService dataStoreService = new DataStoreService(priceRepository);
 
-        Optional<Price> actual = dataStoreService.findEntity(1);
+        Optional<Price> actual = dataStoreService.fetcherService().findEntity(1);
 
         // Assertions
         assertThat(actual).isEmpty();
@@ -65,7 +65,7 @@ class DataStoreServiceTest {
 
         DataStoreService dataStoreService = new DataStoreService(priceRepository);
 
-        Optional<Price> actual = dataStoreService.findEntity(1);
+        Optional<Price> actual = dataStoreService.fetcherService().findEntity(1);
 
         // Assertions
         assertThat(actual).isNotEmpty();

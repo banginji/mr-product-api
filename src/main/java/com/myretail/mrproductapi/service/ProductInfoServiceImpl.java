@@ -13,14 +13,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductInfoServiceImpl implements ProductInfoService {
-    private final ProductPriceService<Price> productPriceService;
+    private final ProductPriceService<Price, Integer> productPriceService;
 
     @Override
     public Optional<ProductPrice> getPrice(Integer id) {
         return productPriceService.getEntity(id);
     }
 
-    private final ProductTitleService<RedSkyResponse> productTitleService;
+    private final ProductTitleService<RedSkyResponse, Integer> productTitleService;
 
     @Override
     public Optional<String> getTitle(Integer id) {

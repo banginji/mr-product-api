@@ -2,14 +2,13 @@ package com.myretail.mrproductapi.service.title;
 
 import com.myretail.mrproductapi.converter.ProductTitleResponseConverter;
 import com.myretail.mrproductapi.domain.redsky.RedSkyResponse;
+import com.myretail.mrproductapi.service.ProductInfoFetcherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class ProductTitleRedSkyService extends ProductTitleService<RedSkyResponse> {
+public class ProductTitleRedSkyService extends ProductTitleService<RedSkyResponse, Integer> {
     private final RedSkyService redSkyService;
 
     @Override
@@ -18,7 +17,7 @@ public class ProductTitleRedSkyService extends ProductTitleService<RedSkyRespons
     }
 
     @Override
-    public Optional<RedSkyResponse> findEntity(Integer id) {
-        return redSkyService.findTitleData(id);
+    public ProductInfoFetcherService<Integer, RedSkyResponse> fetcherService() {
+        return redSkyService::findTitleData;
     }
 }

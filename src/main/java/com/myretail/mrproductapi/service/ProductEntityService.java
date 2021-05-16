@@ -4,11 +4,11 @@ import org.springframework.core.convert.converter.Converter;
 
 import java.util.Optional;
 
-public interface ProductEntityService<IN, OUT> {
+public interface ProductEntityService<IN, OUT, KEY> {
     Converter<Optional<IN>, Optional<OUT>> converter();
-    Optional<IN> findEntity(Integer id);
+    ProductInfoFetcherService<KEY, IN> fetcherService();
 
-    default Optional<OUT> getEntity(Integer id) {
-        return converter().convert(findEntity(id));
+    default Optional<OUT> getEntity(KEY id) {
+        return converter().convert(fetcherService().findEntity(id));
     }
 }
