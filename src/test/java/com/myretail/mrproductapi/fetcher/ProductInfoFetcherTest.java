@@ -1,21 +1,17 @@
 package com.myretail.mrproductapi.fetcher;
 
+import com.myretail.mrproductapi.BaseIT;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProduct;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProductItem;
 import com.myretail.mrproductapi.domain.redsky.RedSkyProductItemDesc;
 import com.myretail.mrproductapi.domain.redsky.RedSkyResponse;
 import com.myretail.mrproductapi.persistence.Price;
 import com.myretail.mrproductapi.repository.PriceRepository;
-import com.myretail.mrproductapi.service.ProductInfoServiceImpl;
-import com.myretail.mrproductapi.service.price.DataStoreService;
-import com.myretail.mrproductapi.service.title.ProductTitleRedSkyService;
 import com.myretail.mrproductapi.service.title.RedSkyService;
 import com.netflix.graphql.dgs.DgsQueryExecutor;
-import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.LinkedHashMap;
@@ -24,8 +20,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("unchecked")
-@SpringBootTest(classes = {DgsAutoConfiguration.class, ProductInfoFetcher.class, ProductInfoServiceImpl.class, DataStoreService.class, ProductTitleRedSkyService.class})
-public class ProductInfoFetcherTest {
+public class ProductInfoFetcherTest extends BaseIT {
     @Autowired
     DgsQueryExecutor dgsQueryExecutor;
 
