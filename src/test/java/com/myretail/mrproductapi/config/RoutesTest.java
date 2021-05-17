@@ -13,14 +13,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Optional;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class RoutesTest extends BaseIT {
     @Autowired
@@ -47,12 +51,12 @@ class RoutesTest extends BaseIT {
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
         mockMvc
-                .perform(MockMvcRequestBuilders.get("/product/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.price").doesNotExist())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").doesNotExist());
+                .perform(get("/product/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.price").doesNotExist())
+                .andExpect(jsonPath("$.title").doesNotExist());
 
         // Interaction verifications
         Mockito.verify(redSkyService).findTitleData(Mockito.anyInt());
@@ -66,13 +70,13 @@ class RoutesTest extends BaseIT {
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
         mockMvc
-                .perform(MockMvcRequestBuilders.get("/product/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.price").doesNotExist())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(title));
+                .perform(get("/product/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.price").doesNotExist())
+                .andExpect(jsonPath("$.title").exists())
+                .andExpect(jsonPath("$.title").value(title));
 
         // Interaction verifications
         Mockito.verify(redSkyService).findTitleData(Mockito.anyInt());
@@ -86,17 +90,55 @@ class RoutesTest extends BaseIT {
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(price));
 
         mockMvc
-                .perform(MockMvcRequestBuilders.get("/product/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.price").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.price.value").value(price.value()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.price.currencyCode").value(price.currencyCode()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").doesNotExist());
+                .perform(get("/product/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.price").exists())
+                .andExpect(jsonPath("$.price.value").value(price.value()))
+                .andExpect(jsonPath("$.price.currencyCode").value(price.currencyCode()))
+                .andExpect(jsonPath("$.title").doesNotExist());
 
         // Interaction verifications
         Mockito.verify(priceRepository).findById(Mockito.anyInt());
         Mockito.verify(redSkyService).findTitleData(Mockito.anyInt());
+    }
+
+    @Test
+    void testUpdatePriceWhenNoPriceIsFound() throws Exception {
+        Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+
+        mockMvc
+                .perform(
+                        put("/product/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"value\": 2.2, \"currencyCode\": \"USD\"}")
+                )
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$").doesNotExist());
+
+        // Interaction verifications
+        Mockito.verify(priceRepository).findById(Mockito.anyInt());
+        Mockito.verify(priceRepository, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void testUpdatePriceWhenPriceIsFound() throws Exception {
+        Price price = new Price(1, 8.1, "USD");
+        Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(price));
+        Mockito.when(priceRepository.save(Mockito.any())).thenReturn(Mockito.any(Price.class));
+
+        mockMvc
+                .perform(
+                        put("/product/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"value\": 2.2, \"currencyCode\": \"USD\"}")
+                )
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$").doesNotExist());
+
+        // Interaction verifications
+        Mockito.verify(priceRepository).findById(Mockito.anyInt());
+        Mockito.verify(priceRepository).save(Mockito.any());
     }
 }
