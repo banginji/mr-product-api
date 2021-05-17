@@ -5,10 +5,10 @@ import org.springframework.core.convert.converter.Converter;
 import java.util.Optional;
 
 public interface ProductEntityService<IN, OUT, KEY> {
-    Converter<Optional<IN>, Optional<OUT>> converter();
+    Converter<Optional<IN>, Optional<OUT>> responseConverter();
     ProductInfoFetcherService<Optional<IN>, KEY> fetcherService();
 
     default Optional<OUT> getEntity(KEY id) {
-        return converter().convert(fetcherService().findEntity(id));
+        return responseConverter().convert(fetcherService().findEntity(id));
     }
 }

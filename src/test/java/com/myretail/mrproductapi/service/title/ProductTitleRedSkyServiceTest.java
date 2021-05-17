@@ -27,7 +27,7 @@ class ProductTitleRedSkyServiceTest {
 
         ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
 
-        Optional<String> result = productTitleRedSkyService.converter().convert(Optional.of(titleData));
+        Optional<String> result = productTitleRedSkyService.responseConverter().convert(Optional.of(titleData));
 
         Optional<String> expected = Optional.of(title);
         assertThat(result).isNotEmpty();
@@ -40,7 +40,7 @@ class ProductTitleRedSkyServiceTest {
 
         ProductTitleRedSkyService productTitleRedSkyService = new ProductTitleRedSkyService(redSkyService);
 
-        Optional<String> result = productTitleRedSkyService.converter().convert(titleData);
+        Optional<String> result = productTitleRedSkyService.responseConverter().convert(titleData);
 
         assertThat(result).isEmpty();
     }

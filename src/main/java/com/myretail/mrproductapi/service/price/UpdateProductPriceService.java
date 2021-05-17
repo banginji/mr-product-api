@@ -2,8 +2,8 @@ package com.myretail.mrproductapi.service.price;
 
 import com.myretail.mrproductapi.converter.ProductPriceResponseConverter;
 import com.myretail.mrproductapi.domain.ProductPrice;
+import com.myretail.mrproductapi.domain.price.UpdatePriceInfo;
 import com.myretail.mrproductapi.persistence.Price;
-import com.myretail.mrproductapi.repository.PriceRepository;
 import com.myretail.mrproductapi.service.ProductInfoFetcherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,16 +12,16 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class DataStoreService extends ProductPriceService<Price, Integer> {
-    private final PriceRepository priceRepository;
+public class UpdateProductPriceService extends ProductPriceService<Price, UpdatePriceInfo> {
+    private final DataSourceService dataSourceService;
 
     @Override
-    public ProductPriceResponseConverter<Price> converter() {
+    public ProductPriceResponseConverter<Price> responseConverter() {
         return source -> source.map(price -> new ProductPrice(price.value(), price.currencyCode()));
     }
 
     @Override
-    public ProductInfoFetcherService<Optional<Price>, Integer> fetcherService() {
-        return priceRepository::findById;
+    public ProductInfoFetcherService<Optional<Price>, UpdatePriceInfo> fetcherService() {
+        return dataSourceService::patchUpdate;
     }
 }

@@ -2,7 +2,6 @@ package com.myretail.mrproductapi.service.price;
 
 import com.myretail.mrproductapi.domain.ProductPrice;
 import com.myretail.mrproductapi.persistence.Price;
-import com.myretail.mrproductapi.repository.PriceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,21 +11,21 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("unchecked")
-class DataStoreServiceTest {
-    PriceRepository priceRepository;
+class GetProductPriceServiceTest {
+    DataSourceService dataSourceService;
 
     @BeforeEach
     void beforeEach() {
-        priceRepository = Mockito.mock(PriceRepository.class);
+        dataSourceService = Mockito.mock(DataSourceService.class);
     }
 
     @Test
     void somePriceConversionTest() {
         Price price = new Price(1, 3.4, "USD");
 
-        DataStoreService dataStoreService = new DataStoreService(priceRepository);
+        GetProductPriceService getProductPriceService = new GetProductPriceService(dataSourceService);
 
-        Optional<ProductPrice> result = dataStoreService.converter().convert(Optional.of(price));
+        Optional<ProductPrice> result = getProductPriceService.responseConverter().convert(Optional.of(price));
 
         Optional<ProductPrice> expected = Optional.of(new ProductPrice(price.value(), price.currencyCode()));
 
@@ -39,20 +38,20 @@ class DataStoreServiceTest {
     void emptyPriceConversionTest() {
         Optional<Price> price = Optional.empty();
 
-        DataStoreService dataStoreService = new DataStoreService(priceRepository);
+        GetProductPriceService getProductPriceService = new GetProductPriceService(dataSourceService);
 
-        Optional<ProductPrice> result = dataStoreService.converter().convert(price);
+        Optional<ProductPrice> result = getProductPriceService.responseConverter().convert(price);
 
         assertThat(result).isEmpty();
     }
 
     @Test
     void testWhenDataStoreDoesNotHavePriceInformationForGivenId() {
-        Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+        Mockito.when(dataSourceService.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
-        DataStoreService dataStoreService = new DataStoreService(priceRepository);
+        GetProductPriceService getProductPriceService = new GetProductPriceService(dataSourceService);
 
-        Optional<Price> actual = dataStoreService.fetcherService().findEntity(1);
+        Optional<Price> actual = getProductPriceService.fetcherService().findEntity(1);
 
         // Assertions
         assertThat(actual).isEmpty();
@@ -61,11 +60,11 @@ class DataStoreServiceTest {
     @Test
     void testWhenDataStoreHasPriceInformationForGivenId() {
         Price price = new Price(1, 1.1, "USD");
-        Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(price));
+        Mockito.when(dataSourceService.findById(Mockito.anyInt())).thenReturn(Optional.of(price));
 
-        DataStoreService dataStoreService = new DataStoreService(priceRepository);
+        GetProductPriceService getProductPriceService = new GetProductPriceService(dataSourceService);
 
-        Optional<Price> actual = dataStoreService.fetcherService().findEntity(1);
+        Optional<Price> actual = getProductPriceService.fetcherService().findEntity(1);
 
         // Assertions
         assertThat(actual).isNotEmpty();
