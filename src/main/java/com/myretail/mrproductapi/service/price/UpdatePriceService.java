@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,10 +24,14 @@ public class UpdatePriceService extends ProductPriceService<Price, UpdatePriceIn
     @Override
     public ProductInfoFetcherService<Optional<Price>, UpdatePriceInfo> fetcherService() {
         return updatePrice -> priceRepository.findById(updatePrice.id())
-                .map(price -> priceRepository.save(Objects.requireNonNull(updateConverter().convert(updatePrice))));
-    }
-
-    private Converter<UpdatePriceInfo, Price> updateConverter() {
-        return updatePrice -> new Price(updatePrice.id(), updatePrice.value(), updatePrice.currencyCode());
+                .map(price ->
+                        priceRepository.save(
+                                new Price(
+                                        price.id(),
+                                        updatePrice.value().orElse(price.value()),
+                                        updatePrice.currencyCode().orElse(price.currencyCode())
+                                )
+                        )
+                );
     }
 }
