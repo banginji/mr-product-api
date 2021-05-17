@@ -7,16 +7,22 @@ import com.myretail.mrproductapi.domain.redsky.RedSkyProductItemDesc;
 import com.myretail.mrproductapi.domain.redsky.RedSkyResponse;
 import com.myretail.mrproductapi.persistence.Price;
 import com.myretail.mrproductapi.repository.PriceRepository;
-import com.myretail.mrproductapi.service.title.RedSkyService;
+import com.myretail.mrproductapi.service.title.RedSkyServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.remoting.RemoteAccessException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Optional;
@@ -30,8 +36,11 @@ class RoutesTest extends BaseIT {
     @Autowired
     WebApplicationContext webApplicationContext;
 
+    @SpyBean
+    RedSkyServiceImpl redSkyService;
+
     @MockBean
-    RedSkyService redSkyService;
+    RestTemplate restTemplate;
 
     @MockBean
     PriceRepository priceRepository;
@@ -47,7 +56,7 @@ class RoutesTest extends BaseIT {
 
     @Test
     void testWhenNoValuesFromBothSourcesForTitleAndPrice() throws Exception {
-        Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenReturn(Optional.empty());
+        Mockito.when(restTemplate.getForObject(Mockito.anyString(), Mockito.any())).thenReturn(null);
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
         mockMvc
@@ -66,7 +75,7 @@ class RoutesTest extends BaseIT {
     @Test
     void testWhenNoPriceIsAvailableInDataSource() throws Exception {
         String title = "t1";
-        Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenReturn(Optional.of(new RedSkyResponse(new RedSkyProduct(new RedSkyProductItem("1", new RedSkyProductItemDesc(title))))));
+        Mockito.when(restTemplate.getForObject(Mockito.anyString(), Mockito.any())).thenReturn(new RedSkyResponse(new RedSkyProduct(new RedSkyProductItem("1", new RedSkyProductItemDesc(title)))));
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
         mockMvc
@@ -86,7 +95,7 @@ class RoutesTest extends BaseIT {
     @Test
     void testWhenNoTitleDataIsPresentInRedSkyForGivenId() throws Exception {
         Price price = new Price(1, 8.1, "USD");
-        Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenReturn(Optional.empty());
+        Mockito.when(restTemplate.getForObject(Mockito.anyString(), Mockito.any())).thenReturn(null);
         Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(price));
 
         mockMvc
@@ -140,5 +149,59 @@ class RoutesTest extends BaseIT {
         // Interaction verifications
         Mockito.verify(priceRepository).findById(Mockito.anyInt());
         Mockito.verify(priceRepository).save(Mockito.any());
+    }
+
+    @Test
+    void testWhenHttpClientErrorExceptionIsThrown() throws Exception {
+        Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+        Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+
+        mockMvc
+                .perform(get("/product/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.price").doesNotExist())
+                .andExpect(jsonPath("$.title").doesNotExist());
+
+        // Interaction verifications
+        Mockito.verify(priceRepository).findById(Mockito.anyInt());
+        Mockito.verify(redSkyService, Mockito.times(2)).findTitleData(Mockito.anyInt());
+    }
+
+    @Test
+    void testWhenRemoteAccessExceptionIsThrown() throws Exception {
+        Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenThrow(new RemoteAccessException("remote access error"));
+        Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+
+        mockMvc
+                .perform(get("/product/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.price").doesNotExist())
+                .andExpect(jsonPath("$.title").doesNotExist());
+
+        // Interaction verifications
+        Mockito.verify(priceRepository).findById(Mockito.anyInt());
+        Mockito.verify(redSkyService, Mockito.times(2)).findTitleData(Mockito.anyInt());
+    }
+
+    @Test
+    void testWhenResourceAccessExceptionIsThrown() throws Exception {
+        Mockito.when(redSkyService.findTitleData(Mockito.anyInt())).thenThrow(new ResourceAccessException("remote access error"));
+        Mockito.when(priceRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+
+        mockMvc
+                .perform(get("/product/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.price").doesNotExist())
+                .andExpect(jsonPath("$.title").doesNotExist());
+
+        // Interaction verifications
+        Mockito.verify(priceRepository).findById(Mockito.anyInt());
+        Mockito.verify(redSkyService, Mockito.times(2)).findTitleData(Mockito.anyInt());
     }
 }

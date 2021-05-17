@@ -30,6 +30,8 @@ class ProductTitleRedSkyServiceTest {
         Optional<String> result = productTitleRedSkyService.responseConverter().convert(Optional.of(titleData));
 
         Optional<String> expected = Optional.of(title);
+
+        // Assertions
         assertThat(result).isNotEmpty();
         assertThat(result).isEqualTo(expected);
     }
@@ -42,6 +44,7 @@ class ProductTitleRedSkyServiceTest {
 
         Optional<String> result = productTitleRedSkyService.responseConverter().convert(titleData);
 
+        // Assertions
         assertThat(result).isEmpty();
     }
 
