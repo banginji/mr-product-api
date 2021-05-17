@@ -2,6 +2,7 @@ package com.myretail.mrproductapi.service;
 
 import com.myretail.mrproductapi.domain.ProductPrice;
 import com.myretail.mrproductapi.domain.price.UpdatePriceInfo;
+import com.myretail.mrproductapi.domain.price.UpdatePriceRequest;
 import com.myretail.mrproductapi.domain.redsky.RedSkyResponse;
 import com.myretail.mrproductapi.persistence.Price;
 import com.myretail.mrproductapi.service.price.ProductPriceService;
@@ -31,7 +32,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     private final ProductPriceService<Price, UpdatePriceInfo> updatePriceService;
 
     @Override
-    public Optional<ProductPrice> updatePrice(UpdatePriceInfo updatePriceInfo) {
-        return updatePriceService.getEntity(updatePriceInfo);
+    public void updatePrice(Integer id, UpdatePriceRequest updatePriceRequest) {
+        updatePriceService.getEntity(new UpdatePriceInfo(id, updatePriceRequest.value(), updatePriceRequest.currencyCode()));
     }
 }

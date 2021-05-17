@@ -25,11 +25,10 @@ public class UpdatePriceService extends ProductPriceService<Price, UpdatePriceIn
     @Override
     public ProductInfoFetcherService<Optional<Price>, UpdatePriceInfo> fetcherService() {
         return updatePrice -> priceRepository.findById(updatePrice.id())
-                .map(price -> priceRepository.save(Objects.requireNonNull(updateConverter().convert(updatePrice))))
-                .or(Optional::empty);
+                .map(price -> priceRepository.save(Objects.requireNonNull(updateConverter().convert(updatePrice))));
     }
 
     private Converter<UpdatePriceInfo, Price> updateConverter() {
-        return updatePrice -> new Price(updatePrice.id(), updatePrice.value(), updatePrice.currency());
+        return updatePrice -> new Price(updatePrice.id(), updatePrice.value(), updatePrice.currencyCode());
     }
 }

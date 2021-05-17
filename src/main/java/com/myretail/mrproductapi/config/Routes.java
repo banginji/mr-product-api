@@ -1,7 +1,7 @@
 package com.myretail.mrproductapi.config;
 
 import com.myretail.mrproductapi.domain.ProductInfo;
-import com.myretail.mrproductapi.domain.price.UpdatePriceInfo;
+import com.myretail.mrproductapi.domain.price.UpdatePriceRequest;
 import com.myretail.mrproductapi.service.ProductInfoService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +10,7 @@ import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
 import static org.springframework.web.servlet.function.RouterFunctions.route;
+import static org.springframework.web.servlet.function.ServerResponse.noContent;
 import static org.springframework.web.servlet.function.ServerResponse.ok;
 
 @Configuration
@@ -35,8 +36,10 @@ public class Routes {
                                         )
                                         .PUT(
                                                 "",
-                                                req -> ok().body(service.updatePrice(req.body(UpdatePriceInfo.class)))
-                                        )
+                                                req -> {
+                                                    service.updatePrice(Integer.parseInt(req.pathVariable("id")), req.body(UpdatePriceRequest.class));
+                                                    return noContent().build();
+                                                })
                 )
                 .build();
     }
