@@ -19,7 +19,7 @@ dependencies {
 	implementation 'org.springframework:spring-aspects'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:latest.release'
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:3.12.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
