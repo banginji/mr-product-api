@@ -35,7 +35,7 @@ Requirements to run the code
 
 Two ways to run the service:
 - The project can be run using the command. The requirement for this would be running mongodb locally
->./gradlew bootRun
+>./gradlew bootRun --args='--redsky.host=https://redsky.target.com'
 
 - The project can also be run on docker containers (service and mongodb) locally using the command
 >./gradlew clean build && docker-compose up
