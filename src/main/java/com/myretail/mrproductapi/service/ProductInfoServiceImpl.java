@@ -5,8 +5,9 @@ import com.myretail.mrproductapi.domain.price.UpdatePriceInfo;
 import com.myretail.mrproductapi.domain.price.UpdatePriceRequest;
 import com.myretail.mrproductapi.domain.redsky.RedSkyResponse;
 import com.myretail.mrproductapi.persistence.Price;
-import com.myretail.mrproductapi.service.price.ProductPriceService;
-import com.myretail.mrproductapi.service.title.ProductTitleService;
+import com.myretail.mrproductapi.service.price.ProductPriceFetcherService;
+import com.myretail.mrproductapi.service.price.ProductPriceUpdateService;
+import com.myretail.mrproductapi.service.title.ProductTitleFetcherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,24 +16,24 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductInfoServiceImpl implements ProductInfoService {
-    private final ProductPriceService<Price, Integer> productPriceService;
+    private final ProductPriceFetcherService<Price, Integer> productPriceFetcherService;
 
     @Override
     public Optional<ProductPrice> getPrice(Integer id) {
-        return productPriceService.getEntity(id);
+        return productPriceFetcherService.getEntity(id);
     }
 
-    private final ProductTitleService<RedSkyResponse, Integer> productTitleService;
+    private final ProductTitleFetcherService<RedSkyResponse, Integer> productTitleFetcherService;
 
     @Override
     public Optional<String> getTitle(Integer id) {
-        return productTitleService.getEntity(id);
+        return productTitleFetcherService.getEntity(id);
     }
 
-    private final ProductPriceService<Price, UpdatePriceInfo> updatePriceService;
+    private final ProductPriceUpdateService<Price> productPriceUpdateService;
 
     @Override
     public void updatePrice(Integer id, UpdatePriceRequest updatePriceRequest) {
-        updatePriceService.getEntity(new UpdatePriceInfo(id, updatePriceRequest.value(), updatePriceRequest.currencyCode()));
+        productPriceUpdateService.updateEntityIfFound(new UpdatePriceInfo(id, updatePriceRequest.value(), updatePriceRequest.currencyCode()));
     }
 }

@@ -19,6 +19,11 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     @Override
+    public void save(Price price) {
+        priceRepository.save(price);
+    }
+
+    @Override
     public Optional<Price> patchUpdate(UpdatePriceInfo updatePriceInfo) {
         return findById(updatePriceInfo.id()).map(
                 price ->

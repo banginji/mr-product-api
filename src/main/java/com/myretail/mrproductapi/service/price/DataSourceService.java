@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface DataSourceService {
     Optional<Price> findById(Integer id);
+    void save(Price price);
     Optional<Price> patchUpdate(UpdatePriceInfo updatePriceInfo);
 }

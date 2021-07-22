@@ -39,7 +39,8 @@ public class Routes {
                                                 req -> {
                                                     service.updatePrice(Integer.parseInt(req.pathVariable("id")), req.body(UpdatePriceRequest.class));
                                                     return noContent().build();
-                                                })
+                                                }
+                                        )
                 )
                 .build();
     }
